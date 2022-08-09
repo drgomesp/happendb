@@ -23,7 +23,7 @@ var (
 	e2 = happendb.NewEvent(
 		happendb.EventType("RepositoryUpdated"),
 		"107342db-0a17-4314-aa8a-2120842a7645",
-		1,
+		2,
 		happendb.AggregateRef{
 			AggregateID:   "3aa25321-1ca3-4b00-8aee-d73e311383b2",
 			AggregateType: "repository",
@@ -33,7 +33,7 @@ var (
 	e3 = happendb.NewEvent(
 		happendb.EventType("RepositoryUpdated"),
 		"a6271955-3b95-4f16-a00e-8e21e57ac106",
-		1,
+		3,
 		happendb.AggregateRef{
 			AggregateID:   "3aa25321-1ca3-4b00-8aee-d73e311383b2",
 			AggregateType: "repository",
@@ -43,7 +43,7 @@ var (
 	e4 = happendb.NewEvent(
 		happendb.EventType("RepositoryUpdated"),
 		"e3d88938-d492-4d3d-b108-f24ea77ce4dd",
-		1,
+		4,
 		happendb.AggregateRef{
 			AggregateID:   "3aa25321-1ca3-4b00-8aee-d73e311383b2",
 			AggregateType: "repository",
@@ -66,13 +66,20 @@ func TestMemoryStore(t *testing.T) {
 			fromVersion: 0,
 		},
 		{
+			name:        "test save on empty store from non-zero version",
+			existing:    []*happendb.Event{},
+			events:      []*happendb.Event{e1, e2},
+			expected:    []*happendb.Event{e1, e2},
+			fromVersion: 360,
+		},
+		{
 			name:        "test save on non-empty store",
 			existing:    []*happendb.Event{e1, e2},
 			events:      []*happendb.Event{e3, e4},
 			expected:    []*happendb.Event{e1, e2, e3, e4},
-			fromVersion: 2,
+			fromVersion: 3,
 		}, {
-			name:          "test save on non-empty store from version 0",
+			name:          "test save on non-empty store from version zero",
 			existing:      []*happendb.Event{e1, e2},
 			events:        []*happendb.Event{e3},
 			expectedError: happendb.ErrStoreInvalidVersion,

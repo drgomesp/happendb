@@ -35,7 +35,7 @@ func (m *Memory) Save(ctx context.Context, events []*happendb.Event, fromVersion
 		e := events[i]
 
 		if len(m.store[id]) > 0 {
-			if fromVersion != 0 && *e.Version != fromVersion+i+1 {
+			if fromVersion != 0 && *e.Version != fromVersion+i {
 				return happendb.ErrStoreInvalidVersion
 			}
 		}

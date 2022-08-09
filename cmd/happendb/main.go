@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	happendb "github.com/drgomesp/happendb/pkg"
 	"github.com/drgomesp/happendb/pkg/store"
 	abciserver "github.com/tendermint/tendermint/abci/server"
 	"github.com/tendermint/tendermint/libs/log"

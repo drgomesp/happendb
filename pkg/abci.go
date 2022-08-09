@@ -92,3 +92,10 @@ func (a *Application) DeliverTx(req types.RequestDeliverTx) types.ResponseDelive
 
 	return types.ResponseDeliverTx{Code: types.CodeTypeOK}
 }
+
+func (a *Application) Query(req types.RequestQuery) types.ResponseQuery {
+	data := string(req.GetData())
+	_ = data
+
+	return types.ResponseQuery{Code: types.CodeTypeOK}
+}
