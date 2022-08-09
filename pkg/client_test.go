@@ -20,10 +20,8 @@ func TestClient_Save(t *testing.T) {
 					EventType("RepositoryInitialized"),
 					"54e260be-26ce-451a-815d-b2a16e4f3cd0",
 					1,
-					AggregateRef{
-						AggregateID:   "3aa25321-1ca3-4b00-8aee-d73e311383b2",
-						AggregateType: "repository",
-					},
+					"3aa25321-1ca3-4b00-8aee-d73e311383b2",
+					"repository",
 				),
 			},
 			fromVersion: 0,
