@@ -7,10 +7,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	happendb "github.com/drgomesp/happendb/pkg"
-	"github.com/drgomesp/happendb/pkg/store"
 	abciserver "github.com/tendermint/tendermint/abci/server"
 	"github.com/tendermint/tendermint/libs/log"
+
+	happendb "github.com/drgomesp/happendb/pkg/abci"
+	"github.com/drgomesp/happendb/pkg/store"
 )
 
 var socketAddr string

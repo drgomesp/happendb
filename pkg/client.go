@@ -2,13 +2,19 @@ package happendb
 
 import (
 	"context"
+	"fmt"
 
+	hexbytes "github.com/tendermint/tendermint/libs/bytes"
+	"github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/rpc/client"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 )
 
+var _ Store = Client{}
+
 type Client struct {
-	client.ABCIClient
+	abci  client.ABCIClient
+	store Store
 }
 
 func NewClient(remote string) (*Client, error) {
@@ -17,30 +23,44 @@ func NewClient(remote string) (*Client, error) {
 		return nil, err
 	}
 
-	events := `{
-  "events": [
-    {
-      "id": "222a1f3a-47ec-4acb-949e-915d5a7ee889",
-      "type": "RepositoryInitialized",
-      "version": "1",
-      "aggregate_id": "7df974e0-1282-42b4-8924-78712a6568e0",
-      "aggregate_type": "repository"
-    }
-  ]
-}`
+	return &Client{
+		abci: abci,
+	}, nil
+}
 
-	// Broadcast the transaction and wait for it to commit (rather use
-	// c.BroadcastTxSync though in production).
-	bres, err := abci.BroadcastTxCommit(context.Background(), []byte(events))
+func (c Client) Save(ctx context.Context, events []*Event, version int) error {
+	type EventsTx struct {
+		Events []*Event `json:"events"`
+	}
+
+	data, err := json.Marshal(EventsTx{Events: events})
+	if err != nil {
+		return err
+	}
+
+	res, err := c.abci.BroadcastTxCommit(context.Background(), data)
+	if err != nil {
+		return err
+	}
+
+	if res.CheckTx.IsErr() || res.DeliverTx.IsErr() {
+		return err
+	}
+
+	return nil
+}
+
+func (c Client) Load(ctx context.Context, aggregateID string) ([]*Event, error) {
+	// Now try to fetch the value for the key
+	res, err := c.abci.ABCIQuery(ctx, aggregateID, hexbytes.HexBytes{})
 	if err != nil {
 		return nil, err
 	}
-
-	if bres.CheckTx.IsErr() || bres.DeliverTx.IsErr() {
+	if res.Response.IsErr() {
 		return nil, err
 	}
 
-	return &Client{
-		ABCIClient: abci,
-	}, nil
+	fmt.Println("Got:", string(res.Response.Value))
+
+	return nil, nil
 }

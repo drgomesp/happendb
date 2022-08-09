@@ -6,6 +6,8 @@ import (
 	happendb "github.com/drgomesp/happendb/pkg"
 )
 
+var _ happendb.Store = Memory{}
+
 type Memory struct {
 	store map[string][]*happendb.Event
 }
@@ -16,7 +18,7 @@ func NewMemory() *Memory {
 	}
 }
 
-func (m *Memory) Save(ctx context.Context, events []*happendb.Event, fromVersion int) error {
+func (m Memory) Save(ctx context.Context, events []*happendb.Event, fromVersion int) error {
 	if len(events) == 0 {
 		return happendb.ErrStoreMissingEvents
 	}
@@ -48,7 +50,7 @@ func (m *Memory) Save(ctx context.Context, events []*happendb.Event, fromVersion
 	return nil
 }
 
-func (m *Memory) Load(ctx context.Context, aggregateID string) ([]*happendb.Event, error) {
+func (m Memory) Load(ctx context.Context, aggregateID string) ([]*happendb.Event, error) {
 	events, ok := m.store[aggregateID]
 	if ok && len(events) > 0 {
 		return events, nil

@@ -1,14 +1,16 @@
-package happendb
+package abci
 
 import (
 	"context"
 
 	"github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/json"
+
+	"github.com/drgomesp/happendb/pkg"
 )
 
 type TxEvents struct {
-	Events []*Event `json:"events"`
+	Events []*happendb.Event `json:"events"`
 }
 
 const (
@@ -22,10 +24,10 @@ const (
 type Application struct {
 	*types.BaseApplication
 
-	store Store
+	store happendb.Store
 }
 
-func NewApplication(store Store) *Application {
+func NewApplication(store happendb.Store) *Application {
 	return &Application{
 		BaseApplication: types.NewBaseApplication(),
 		store:           store,
@@ -45,7 +47,7 @@ func (a *Application) CheckTx(req types.RequestCheckTx) types.ResponseCheckTx {
 	}
 }
 
-func (a *Application) parseTxEvents(data []byte) ([]*Event, error) {
+func (a *Application) parseTxEvents(data []byte) ([]*happendb.Event, error) {
 	var tx TxEvents
 	err := json.Unmarshal(data, &tx)
 
@@ -94,8 +96,22 @@ func (a *Application) DeliverTx(req types.RequestDeliverTx) types.ResponseDelive
 }
 
 func (a *Application) Query(req types.RequestQuery) types.ResponseQuery {
-	data := string(req.GetData())
-	_ = data
+	aggregateId := string(req.GetData())
 
-	return types.ResponseQuery{Code: types.CodeTypeOK}
+	ctx := context.Background()
+	events, err := a.store.Load(ctx, aggregateId)
+
+	if err != nil {
+		return types.ResponseQuery{Code: ErrCodeLoadFailed}
+	}
+
+	data, err := json.Marshal(events)
+	if err != nil {
+		return types.ResponseQuery{Code: ErrCodeLoadFailed}
+	}
+
+	return types.ResponseQuery{
+		Code:  types.CodeTypeOK,
+		Value: data,
+	}
 }
