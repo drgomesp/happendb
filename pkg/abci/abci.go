@@ -24,10 +24,10 @@ const (
 type Application struct {
 	*types.BaseApplication
 
-	store happendb.Store
+	store happendb.EventStore
 }
 
-func NewApplication(store happendb.Store) *Application {
+func NewApplication(store happendb.EventStore) *Application {
 	return &Application{
 		BaseApplication: types.NewBaseApplication(),
 		store:           store,

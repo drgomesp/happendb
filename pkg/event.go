@@ -13,7 +13,7 @@ type Event struct {
 	Source string `json:"source"`
 
 	// Type is a general event type
-	Type EventType
+	Type EventType `json:"type"`
 }
 
 func NewEvent(t EventType, id string, version int, source string) *Event {

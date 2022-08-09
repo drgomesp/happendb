@@ -2,19 +2,19 @@ package happendb
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/davecgh/go-spew/spew"
 	hexbytes "github.com/tendermint/tendermint/libs/bytes"
 	"github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/rpc/client"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 )
 
-var _ Store = Client{}
+var _ EventStore = Client{}
 
 type Client struct {
 	abci  client.ABCIClient
-	store Store
+	store EventStore
 }
 
 func NewClient(remote string) (*Client, error) {
@@ -60,7 +60,11 @@ func (c Client) Load(ctx context.Context, t EventType) ([]*Event, error) {
 		return nil, err
 	}
 
-	fmt.Println("Got:", string(res.Response.Value))
+	var events []*Event
+	spew.Dump(string(res.Response.Value))
+	if err = json.Unmarshal(res.Response.Value, &events); err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	return events, nil
 }

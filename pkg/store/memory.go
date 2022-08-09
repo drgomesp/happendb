@@ -6,7 +6,7 @@ import (
 	happendb "github.com/drgomesp/happendb/pkg"
 )
 
-var _ happendb.Store = Memory{}
+var _ happendb.EventStore = Memory{}
 
 type Memory struct {
 	store map[string][]*happendb.Event

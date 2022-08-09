@@ -40,3 +40,30 @@ func TestClient_Save(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_Load(t *testing.T) {
+	tests := []struct {
+		name           string
+		t              EventType
+		expectedEvents []*Event
+	}{
+		{
+			name:           "load",
+			t:              EventType("repository.RepositoryInitialized"),
+			expectedEvents: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			client, err := NewClient("http://localhost:26657")
+			assert.NoError(t, err)
+			assert.NotNil(t, client)
+
+			ctx := context.Background()
+			events, err := client.Load(ctx, tt.t)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.expectedEvents, events)
+		})
+	}
+}
