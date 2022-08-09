@@ -28,7 +28,7 @@ func NewClient(remote string) (*Client, error) {
 	}, nil
 }
 
-func (c Client) Save(ctx context.Context, events []*Event, version int) error {
+func (c Client) Save(ctx context.Context, events []*Event, fromVersion int) error {
 	type EventsTx struct {
 		Events []*Event `json:"events"`
 	}
@@ -37,6 +37,8 @@ func (c Client) Save(ctx context.Context, events []*Event, version int) error {
 	if err != nil {
 		return err
 	}
+
+	_ = fromVersion // ignore, since it will be enforced by the event store
 
 	res, err := c.abci.BroadcastTxCommit(context.Background(), data)
 	if err != nil {
