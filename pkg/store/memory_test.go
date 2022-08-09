@@ -4,50 +4,39 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	happendb "github.com/drgomesp/happendb/pkg"
 	"github.com/drgomesp/happendb/pkg/store"
-	"github.com/stretchr/testify/assert"
 )
 
 var (
 	e1 = happendb.NewEvent(
-		happendb.EventType("RepositoryInitialized"),
+		"repository.RepositoryInitialized",
 		"54e260be-26ce-451a-815d-b2a16e4f3cd0",
 		1,
-		happendb.AggregateRef{
-			AggregateID:   "3aa25321-1ca3-4b00-8aee-d73e311383b2",
-			AggregateType: "repository",
-		},
+		"my-app",
 	)
 
 	e2 = happendb.NewEvent(
-		happendb.EventType("RepositoryUpdated"),
+		"repository.RepositoryUpdated",
 		"107342db-0a17-4314-aa8a-2120842a7645",
 		2,
-		happendb.AggregateRef{
-			AggregateID:   "3aa25321-1ca3-4b00-8aee-d73e311383b2",
-			AggregateType: "repository",
-		},
+		"my-app",
 	)
 
 	e3 = happendb.NewEvent(
-		happendb.EventType("RepositoryUpdated"),
+		"repository.RepositoryUpdated",
 		"a6271955-3b95-4f16-a00e-8e21e57ac106",
 		3,
-		happendb.AggregateRef{
-			AggregateID:   "3aa25321-1ca3-4b00-8aee-d73e311383b2",
-			AggregateType: "repository",
-		},
+		"my-app",
 	)
 
 	e4 = happendb.NewEvent(
-		happendb.EventType("RepositoryUpdated"),
+		"repository.RepositoryUpdated",
 		"e3d88938-d492-4d3d-b108-f24ea77ce4dd",
 		4,
-		happendb.AggregateRef{
-			AggregateID:   "3aa25321-1ca3-4b00-8aee-d73e311383b2",
-			AggregateType: "repository",
-		},
+		"my-app",
 	)
 )
 
@@ -106,7 +95,7 @@ func TestMemoryStore(t *testing.T) {
 			err := memoryStore.Save(ctx, tt.events, tt.fromVersion)
 
 			if tt.expectedError == nil {
-				loaded, loadErr := memoryStore.Load(ctx, tt.events[0].AggregateID)
+				loaded, loadErr := memoryStore.Load(ctx, tt.events[0].Type)
 				assert.NoError(t, loadErr)
 				assert.Equal(t, tt.expected, loaded)
 			} else {

@@ -50,9 +50,9 @@ func (c Client) Save(ctx context.Context, events []*Event, version int) error {
 	return nil
 }
 
-func (c Client) Load(ctx context.Context, aggregateID string) ([]*Event, error) {
+func (c Client) Load(ctx context.Context, t EventType) ([]*Event, error) {
 	// Now try to fetch the value for the key
-	res, err := c.abci.ABCIQuery(ctx, aggregateID, hexbytes.HexBytes{})
+	res, err := c.abci.ABCIQuery(ctx, string(t), hexbytes.HexBytes{})
 	if err != nil {
 		return nil, err
 	}

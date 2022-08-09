@@ -12,5 +12,5 @@ var (
 
 type Store interface {
 	Save(ctx context.Context, events []*Event, version int) error
-	Load(ctx context.Context, aggregateID string) ([]*Event, error)
+	Load(ctx context.Context, t EventType) ([]*Event, error)
 }

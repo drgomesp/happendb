@@ -24,7 +24,7 @@ func (m Memory) Save(ctx context.Context, events []*happendb.Event, fromVersion 
 	}
 
 	head := events[0]
-	id := head.AggregateID
+	id := string(head.Type)
 	empty := len(m.store[id]) == 0
 
 	if !empty && fromVersion == 0 {
@@ -50,8 +50,8 @@ func (m Memory) Save(ctx context.Context, events []*happendb.Event, fromVersion 
 	return nil
 }
 
-func (m Memory) Load(ctx context.Context, aggregateID string) ([]*happendb.Event, error) {
-	events, ok := m.store[aggregateID]
+func (m Memory) Load(ctx context.Context, t happendb.EventType) ([]*happendb.Event, error) {
+	events, ok := m.store[string(t)]
 	if ok && len(events) > 0 {
 		return events, nil
 	}

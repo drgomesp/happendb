@@ -3,19 +3,24 @@ package happendb
 type EventType string
 
 type Event struct {
-	AggregateID   string `json:"aggregate_id"`
-	AggregateType string `json:"aggregate_type"`
-	ID            string `json:"id"`
-	Type          string `json:"type"`
-	Version       *int   `json:"version,string"`
+	// ID is a Version 4 UUID
+	ID string `json:"id"`
+
+	// Version starting from 0 (zero).
+	Version *int `json:"version,string"`
+
+	// Source is a unique source string identifier
+	Source string `json:"source"`
+
+	// Type is a general event type
+	Type EventType
 }
 
-func NewEvent(t EventType, id string, version int, aggregateID, aggregateType string) *Event {
+func NewEvent(t EventType, id string, version int, source string) *Event {
 	return &Event{
-		AggregateID:   aggregateID,
-		AggregateType: aggregateType,
-		ID:            id,
-		Type:          string(t),
-		Version:       &version,
+		ID:      id,
+		Version: &version,
+		Source:  source,
+		Type:    t,
 	}
 }
