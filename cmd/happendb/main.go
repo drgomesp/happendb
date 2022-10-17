@@ -8,6 +8,9 @@ import (
 	"path/filepath"
 	"syscall"
 
+	kitlevel "github.com/go-kit/kit/log/level"
+
+	"github.com/go-kit/log/term"
 	"github.com/spf13/viper"
 	"github.com/tendermint/tendermint/abci/types"
 	cfg "github.com/tendermint/tendermint/config"
@@ -26,7 +29,6 @@ var configFile string
 var socketAddr string
 
 func init() {
-	flag.StringVar(&socketAddr, "socket-addr", "tcp://127.0.0.1:26658", "Unix domain socket address")
 	flag.StringVar(&configFile, "config", "$HOME/.tendermint/config/config.toml", "Path to config.toml")
 }
 
@@ -34,10 +36,6 @@ func main() {
 	flag.Parse()
 
 	app := happendb.NewApplication(store.NewMemory())
-
-	//server := abciserver.NewSocketServer(socketAddr, app)
-	//server.SetLogger(logger)
-
 	node, err := newTendermint(app, configFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v", err)
@@ -82,7 +80,21 @@ func newTendermint(app types.Application, configFile string) (service.Service, e
 		return nil, fmt.Errorf("failed to load node's key: %w", err)
 	}
 
-	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
+	logger := log.NewTMLoggerWithColorFn(log.NewSyncWriter(os.Stdout), func(keyvals ...interface{}) term.FgBgColor {
+		if keyvals[0] != kitlevel.Key() {
+			panic(fmt.Sprintf("expected level key to be first, got %v", keyvals[0]))
+		}
+		switch keyvals[1].(kitlevel.Value).String() {
+		case "info":
+			return term.FgBgColor{Fg: term.DarkBlue}
+		case "debug":
+			return term.FgBgColor{Fg: term.DarkCyan}
+		case "error":
+			return term.FgBgColor{Fg: term.Red}
+		default:
+			return term.FgBgColor{}
+		}
+	})
 	// create node
 	node, err := nm.NewNode(
 		config,
