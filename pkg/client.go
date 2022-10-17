@@ -18,7 +18,7 @@ type Client struct {
 }
 
 func NewClient(remote string) (*Client, error) {
-	abci, err := rpchttp.New(remote)
+	abci, err := rpchttp.New(remote, "")
 	if err != nil {
 		return nil, err
 	}
