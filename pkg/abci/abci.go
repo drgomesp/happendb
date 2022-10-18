@@ -70,7 +70,7 @@ func (a *Application) DeliverTx(req types.RequestDeliverTx) types.ResponseDelive
 	}
 
 	head := events[0]
-	previous, err := a.store.Load(ctx, head.Type)
+	previous, err := a.store.Load(ctx, head.ID)
 	if err != nil {
 		return types.ResponseDeliverTx{
 			Code: ErrCodeLoadFailed,
@@ -96,10 +96,10 @@ func (a *Application) DeliverTx(req types.RequestDeliverTx) types.ResponseDelive
 }
 
 func (a *Application) Query(req types.RequestQuery) types.ResponseQuery {
-	eventType := happendb.EventType(req.GetData())
+	id := req.GetData()
 
 	ctx := context.Background()
-	events, err := a.store.Load(ctx, eventType)
+	events, err := a.store.Load(ctx, string(id))
 
 	if err != nil {
 		return types.ResponseQuery{Code: ErrCodeLoadFailed}

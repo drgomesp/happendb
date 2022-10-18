@@ -12,5 +12,5 @@ var (
 
 type EventStore interface {
 	Save(ctx context.Context, events []*Event, version int) error
-	Load(ctx context.Context, t EventType) ([]*Event, error)
+	Load(ctx context.Context, id string) ([]*Event, error)
 }
