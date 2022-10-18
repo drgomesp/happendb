@@ -1,13 +1,17 @@
 version: "3"
 
 tasks:
-  chain:serve:
+  run:
     summary: Serve the blockchain using Ignite
     cmds:
-      - ignite chain serve
+      - docker-compose up
     silent: true
 
   build:
     cmds:
       - go build -o happendbd cmd/happendbd/*
     silent: false
+
+  test:
+    cmds:
+      - go test ./... -cover -v
