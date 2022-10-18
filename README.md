@@ -27,6 +27,21 @@ This project uses [Taskfile](https://taskfile.dev/), which is easier than someth
 
 To list available tasks, run:
 
+## Running
+
+- The easiest way is to use docker-compose:
+
+```bash
+$ docker-compose up
+```
+
+- Or, if you have a Tendermint instance running locally, you can also run the binary or the Go command directly:
+
+```bash
+# assuming tendermint rpc is avaialble at tcp://127.0.0.1:26658
+go run cmd/happendb -socket-addr=tcp://127.0.0.1:26658
+```
+
 ```bash
 $ task --list-all
 ```
