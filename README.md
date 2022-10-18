@@ -5,7 +5,7 @@
 [![build](https://github.com/drgomesp/happendb/actions/workflows/go-test.yml/badge.svg?style=squared)](https://github.com/drgomesp/happendb/actions)
 [![codecov](https://codecov.io/gh/drgomesp/happendb/branch/main/graph/badge.svg?token=BRMFJRJV2X)](https://codecov.io/gh/drgomesp/happendb)
 
-> ⚙ gRPC/Protobuf on Libp2p with gRPC-Gateway support.
+> A decentralized event-sourcing platform.
 
 ## Table of Contents
 
