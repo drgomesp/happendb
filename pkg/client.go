@@ -13,8 +13,8 @@ import (
 var _ EventStore = Client{}
 
 type Client struct {
-	abci  client.ABCIClient
-	store EventStore
+	abci client.ABCIClient
+	//store EventStore
 }
 
 func NewClient(remote string) (*Client, error) {

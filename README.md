@@ -5,7 +5,7 @@
 [![build](https://github.com/drgomesp/happendb/actions/workflows/go-test.yml/badge.svg?style=squared)](https://github.com/drgomesp/happendb/actions)
 [![codecov](https://codecov.io/gh/drgomesp/happendb/branch/main/graph/badge.svg?token=BRMFJRJV2X)](https://codecov.io/gh/drgomesp/happendb)
 
-> ⚙ gRPC/Protobuf on Libp2p with gRPC-Gateway support.
+> A decentralized event-sourcing platform.
 
 ## Table of Contents
 
@@ -26,6 +26,21 @@ go get github.com/drgomesp/happendb
 This project uses [Taskfile](https://taskfile.dev/), which is easier than something like GNU Make.
 
 To list available tasks, run:
+
+## Running
+
+- The easiest way is to use docker-compose:
+
+```bash
+$ docker-compose up
+```
+
+- Or, if you have a Tendermint instance running locally, you can also run the binary or the Go command directly:
+
+```bash
+# assuming tendermint rpc is avaialble at tcp://127.0.0.1:26658
+go run cmd/happendb -socket-addr=tcp://127.0.0.1:26658
+```
 
 ```bash
 $ task --list-all
