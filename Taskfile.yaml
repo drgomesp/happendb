@@ -1,0 +1,13 @@
+version: "3"
+
+tasks:
+  chain:serve:
+    summary: Serve the blockchain using Ignite
+    cmds:
+      - ignite chain serve
+    silent: true
+
+  build:
+    cmds:
+      - go build -o happendbd cmd/happendbd/*
+    silent: false

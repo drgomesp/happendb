@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  tendermint:
+    image: tendermint/tendermint:v0.35.0
+    # volumes:
+    #   - ./tmdata:/tendermint
+    entrypoint: ""
+    ports:
+      - "26656:26656"
+      - "26657:26657"
+    command: sh -c "tendermint init validator && tendermint start --proxy-app=tcp://happendb:26658"
+#    command: bash -c "tendermint unsafe_reset_all && tendermint start --proxy_app=tcp://happendb:26658 --log_level debug"
+    restart: always
+    depends_on:
+      - happendb
+
+  happendb:
+    build: .
+    container_name: happendb_daemon
+    ports:
+      - "26658:26658"
