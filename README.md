@@ -27,6 +27,10 @@ This project uses [Taskfile](https://taskfile.dev/), which is easier than someth
 
 To list available tasks, run:
 
+```bash
+$ task --list-all
+```
+
 ## Running
 
 - The easiest way is to use docker-compose:
@@ -39,11 +43,7 @@ $ docker-compose up
 
 ```bash
 # assuming tendermint rpc is avaialble at tcp://127.0.0.1:26658
-go run cmd/happendb -socket-addr=tcp://127.0.0.1:26658
-```
-
-```bash
-$ task --list-all
+$ go run cmd/happendb -socket-addr=tcp://127.0.0.1:26658
 ```
 
 ## Contributing
