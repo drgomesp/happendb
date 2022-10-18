@@ -1,4 +1,4 @@
-package happendb
+package core
 
 import (
 	"context"

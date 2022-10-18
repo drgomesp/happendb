@@ -1,4 +1,4 @@
-package happendb
+package abci
 
 import (
 	"context"
@@ -8,9 +8,11 @@ import (
 	"github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/rpc/client"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
+
+	"github.com/drgomesp/happendb/pkg/core"
 )
 
-var _ EventStore = Client{}
+var _ core.EventStore = &Client{}
 
 type Client struct {
 	abci client.ABCIClient
@@ -28,9 +30,9 @@ func NewClient(remote string) (*Client, error) {
 	}, nil
 }
 
-func (c Client) Save(ctx context.Context, events []*Event, fromVersion int) error {
+func (c *Client) Save(ctx context.Context, events []*core.Event, fromVersion int) error {
 	type EventsTx struct {
-		Events []*Event `json:"events"`
+		Events []*core.Event `json:"events"`
 	}
 
 	data, err := json.Marshal(EventsTx{Events: events})
@@ -52,7 +54,7 @@ func (c Client) Save(ctx context.Context, events []*Event, fromVersion int) erro
 	return nil
 }
 
-func (c Client) Load(ctx context.Context, id string) ([]*Event, error) {
+func (c *Client) Load(ctx context.Context, id string) ([]*core.Event, error) {
 	// Now try to fetch the value for the key
 	res, err := c.abci.ABCIQuery(ctx, id, hexbytes.HexBytes{})
 	if err != nil {
@@ -62,7 +64,7 @@ func (c Client) Load(ctx context.Context, id string) ([]*Event, error) {
 		return nil, err
 	}
 
-	var events []*Event
+	var events []*core.Event
 	spew.Dump(string(res.Response.Value))
 	if err = json.Unmarshal(res.Response.Value, &events); err != nil {
 		return nil, err

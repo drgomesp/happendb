@@ -1,4 +1,4 @@
-package happendb
+package abci
 
 import (
 	"context"
@@ -6,33 +6,35 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/drgomesp/happendb/pkg/core"
 )
 
 type clientMock struct {
 	mock.Mock
 }
 
-func (m *clientMock) Save(ctx context.Context, events []*Event, fromVersion int) error {
+func (m *clientMock) Save(ctx context.Context, events []*core.Event, fromVersion int) error {
 	args := m.Called(ctx, events, fromVersion)
 	return args.Error(0)
 
 }
 
-func (m *clientMock) Load(ctx context.Context, eventType EventType) ([]*Event, error) {
+func (m *clientMock) Load(ctx context.Context, eventType core.EventType) ([]*core.Event, error) {
 	args := m.Called(ctx, eventType)
-	return args.Get(0).([]*Event), args.Error(1)
+	return args.Get(0).([]*core.Event), args.Error(1)
 }
 
 func TestClient_Save(t *testing.T) {
 	tests := []struct {
 		name        string
-		events      []*Event
+		events      []*core.Event
 		fromVersion int
 	}{
 		{
 			name: "save",
-			events: []*Event{
-				NewEvent(
+			events: []*core.Event{
+				core.NewEvent(
 					"repository.RepositoryInitialized",
 					"54e260be-26ce-451a-815d-b2a16e4f3cd0",
 					1,
@@ -61,14 +63,14 @@ func TestClient_Save(t *testing.T) {
 func TestClient_Load(t *testing.T) {
 	tests := []struct {
 		name           string
-		eventType      EventType
-		expectedEvents []*Event
+		eventType      core.EventType
+		expectedEvents []*core.Event
 	}{
 		{
 			name:      "load",
-			eventType: EventType("repository.RepositoryInitialized"),
-			expectedEvents: []*Event{
-				NewEvent(
+			eventType: core.EventType("repository.RepositoryInitialized"),
+			expectedEvents: []*core.Event{
+				core.NewEvent(
 					"repository.RepositoryInitialized",
 					"54e260be-26ce-451a-815d-b2a16e4f3cd0",
 					1,

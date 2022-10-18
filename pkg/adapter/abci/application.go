@@ -6,11 +6,11 @@ import (
 	"github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/json"
 
-	"github.com/drgomesp/happendb/pkg"
+	"github.com/drgomesp/happendb/pkg/core"
 )
 
 type TxEvents struct {
-	Events []*happendb.Event `json:"events"`
+	Events []*core.Event `json:"events"`
 }
 
 const (
@@ -24,10 +24,10 @@ const (
 type Application struct {
 	*types.BaseApplication
 
-	store happendb.EventStore
+	store core.EventStore
 }
 
-func NewApplication(store happendb.EventStore) *Application {
+func NewApplication(store core.EventStore) *Application {
 	return &Application{
 		BaseApplication: types.NewBaseApplication(),
 		store:           store,
@@ -47,7 +47,7 @@ func (a *Application) CheckTx(req types.RequestCheckTx) types.ResponseCheckTx {
 	}
 }
 
-func (a *Application) parseTxEvents(data []byte) ([]*happendb.Event, error) {
+func (a *Application) parseTxEvents(data []byte) ([]*core.Event, error) {
 	var tx TxEvents
 	err := json.Unmarshal(data, &tx)
 

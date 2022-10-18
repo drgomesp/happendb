@@ -12,8 +12,8 @@ import (
 	abciserver "github.com/tendermint/tendermint/abci/server"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/drgomesp/happendb/pkg/abci"
-	"github.com/drgomesp/happendb/pkg/store"
+	"github.com/drgomesp/happendb/pkg/adapter/abci"
+	"github.com/drgomesp/happendb/pkg/adapter/store"
 )
 
 var socketAddr string
