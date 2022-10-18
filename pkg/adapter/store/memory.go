@@ -3,24 +3,24 @@ package store
 import (
 	"context"
 
-	happendb "github.com/drgomesp/happendb/pkg"
+	"github.com/drgomesp/happendb/pkg/core"
 )
 
-var _ happendb.EventStore = Memory{}
+var _ core.EventStore = Memory{}
 
 type Memory struct {
-	Events map[string][]*happendb.Event
+	Events map[string][]*core.Event
 }
 
 func NewMemory() *Memory {
 	return &Memory{
-		Events: make(map[string][]*happendb.Event, 0),
+		Events: make(map[string][]*core.Event, 0),
 	}
 }
 
-func (m Memory) Save(ctx context.Context, events []*happendb.Event, fromVersion int) error {
+func (m Memory) Save(ctx context.Context, events []*core.Event, fromVersion int) error {
 	if len(events) == 0 {
-		return happendb.ErrStoreMissingEvents
+		return core.ErrStoreMissingEvents
 	}
 
 	head := events[0]
@@ -28,17 +28,17 @@ func (m Memory) Save(ctx context.Context, events []*happendb.Event, fromVersion 
 	empty := len(m.Events[id]) == 0
 
 	if !empty && fromVersion == 0 {
-		return happendb.ErrStoreInvalidVersion
+		return core.ErrStoreInvalidVersion
 	}
 
-	pending := make([]*happendb.Event, len(events))
+	pending := make([]*core.Event, len(events))
 
 	for i := 0; i < len(events); i++ {
 		e := events[i]
 
 		if len(m.Events[id]) > 0 {
 			if fromVersion != 0 && *e.Version != fromVersion+i {
-				return happendb.ErrStoreInvalidVersion
+				return core.ErrStoreInvalidVersion
 			}
 		}
 
@@ -50,7 +50,7 @@ func (m Memory) Save(ctx context.Context, events []*happendb.Event, fromVersion 
 	return nil
 }
 
-func (m Memory) Load(ctx context.Context, id string) ([]*happendb.Event, error) {
+func (m Memory) Load(ctx context.Context, id string) ([]*core.Event, error) {
 	events, ok := m.Events[id]
 	if ok && len(events) > 0 {
 		return events, nil

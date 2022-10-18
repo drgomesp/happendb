@@ -9,7 +9,7 @@ import (
 	"github.com/tendermint/tendermint/abci/example/code"
 	"github.com/tendermint/tendermint/abci/types"
 
-	"github.com/drgomesp/happendb/pkg/store"
+	"github.com/drgomesp/happendb/pkg/adapter/store"
 )
 
 func TestNewApplication(t *testing.T) {
