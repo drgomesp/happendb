@@ -52,9 +52,9 @@ func (c Client) Save(ctx context.Context, events []*Event, fromVersion int) erro
 	return nil
 }
 
-func (c Client) Load(ctx context.Context, t EventType) ([]*Event, error) {
+func (c Client) Load(ctx context.Context, id string) ([]*Event, error) {
 	// Now try to fetch the value for the key
-	res, err := c.abci.ABCIQuery(ctx, string(t), hexbytes.HexBytes{})
+	res, err := c.abci.ABCIQuery(ctx, id, hexbytes.HexBytes{})
 	if err != nil {
 		return nil, err
 	}

@@ -25,6 +25,7 @@ require (
 	github.com/rs/cors v1.8.2 // indirect
 	github.com/rs/zerolog v1.28.0 // indirect
 	github.com/sasha-s/go-deadlock v0.3.1 // indirect
+	github.com/stretchr/objx v0.4.0 // indirect
 	github.com/tendermint/tm-db v0.6.6 // indirect
 	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a // indirect
 	golang.org/x/net v0.0.0-20221017152216-f25eb7ecb193 // indirect
