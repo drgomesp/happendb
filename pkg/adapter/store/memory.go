@@ -24,8 +24,7 @@ func (m Memory) Save(ctx context.Context, events []*core.Event, fromVersion int)
 	}
 
 	head := events[0]
-	id := string(head.ID)
-	empty := len(m.Events[id]) == 0
+	empty := len(m.Events[head.AggregateID]) == 0
 
 	if !empty && fromVersion == 0 {
 		return core.ErrStoreInvalidVersion
@@ -36,7 +35,7 @@ func (m Memory) Save(ctx context.Context, events []*core.Event, fromVersion int)
 	for i := 0; i < len(events); i++ {
 		e := events[i]
 
-		if len(m.Events[id]) > 0 {
+		if len(m.Events[head.AggregateID]) > 0 {
 			if fromVersion != 0 && *e.Version != fromVersion+i {
 				return core.ErrStoreInvalidVersion
 			}
@@ -45,13 +44,13 @@ func (m Memory) Save(ctx context.Context, events []*core.Event, fromVersion int)
 		pending[i] = e
 	}
 
-	m.Events[id] = append(m.Events[id], pending...)
+	m.Events[head.AggregateID] = append(m.Events[head.AggregateID], pending...)
 
 	return nil
 }
 
-func (m Memory) Load(ctx context.Context, id string) ([]*core.Event, error) {
-	events, ok := m.Events[id]
+func (m Memory) Load(ctx context.Context, aggregateID string) ([]*core.Event, error) {
+	events, ok := m.Events[aggregateID]
 	if ok && len(events) > 0 {
 		return events, nil
 	}
